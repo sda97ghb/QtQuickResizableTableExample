@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ResizableCell.qml</file>
+        <file>ResizableCellBehavior.qml</file>
+        <file>ResizableCellBorder.qml</file>
+        <file>ChannelParameters.qml</file>
+    </qresource>
+</RCC>
