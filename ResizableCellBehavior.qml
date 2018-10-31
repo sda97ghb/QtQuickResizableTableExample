@@ -4,12 +4,12 @@ import MyTypes 0.1
 MouseArea {
     property ResizableCellSizes cellSizes: null
 
+    property var shouldResizeColumns: []
+
     property double resizeZoneSize: Qt.platform.os == "android" ? 24 : 6;
     property point pressPoint: Qt.point(0, 0)
     property int resizingRow: 0
-    property int resizingColumn: 0
-    property double resizingRowStartHeight: cellSizes.defaultCellHeight
-    property double resizingColumnStartWidth: cellSizes.defaultCellWidth
+    property bool resizingColumn: false
 
     function zoneAt(x, y) {
         var cornerSize = resizeZoneSize;
@@ -32,10 +32,6 @@ MouseArea {
                 ][zone.y][zone.x];
     }
 
-    function columnForZone(zone) {
-        return [-1, column][zone.x];
-    }
-
     function rowForZone(zone) {
         return [-1, row][zone.y];
     }
@@ -46,12 +42,18 @@ MouseArea {
         var dx = currentPoint.x - pressPoint.x;
         var dy = currentPoint.y - pressPoint.y;
 
-        if (resizingColumn >= 0) {
-            cellSizes.setColumnWidth(resizingColumn, resizingColumnStartWidth + dx);
+        if (resizingColumn) {
+            shouldResizeColumns.forEach(function(element){
+                var oldWidth = cellSizes.columnWidth(element.column);
+                cellSizes.setColumnWidth(element.column, oldWidth + element.mul * dx);
+            })
         }
         if (resizingRow >= 0) {
-            cellSizes.setRowHeight(resizingRow, resizingRowStartHeight + dy);
+            var oldHeight = cellSizes.rowHeight(resizingRow);
+            cellSizes.setRowHeight(resizingRow, oldHeight + dy);
         }
+
+        pressPoint = currentPoint
 
         theTableView.forceLayout();
     }
@@ -74,12 +76,8 @@ MouseArea {
 
     onPressed: {
         var zone = zoneAt(mouse.x, mouse.y);
-        resizingColumn = columnForZone(zone);
+        resizingColumn = zone.x >= 0;
         resizingRow = rowForZone(zone);
-        if (resizingColumn >= 0)
-            resizingColumnStartWidth = cellSizes.columnWidth(resizingColumn);
-        if (resizingRow >= 0)
-            resizingRowStartHeight = cellSizes.rowHeight(resizingRow);
 
         pressPoint = Qt.point(parent.x + mouse.x, parent.y + mouse.y);
 

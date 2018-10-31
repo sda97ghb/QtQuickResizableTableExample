@@ -28,48 +28,17 @@ Window {
         model: theModel
         rowHeightProvider: theCellSizes.rowHeight
         columnWidthProvider: theCellSizes.columnWidth
-        delegate: ResizableCell {
-            cellSizes: theCellSizes
-
-            ChannelParameters {
-                visible: column === 0
-                anchors.fill: parent.content
-            }
-
-            Item {
-                visible: column === 1
-                anchors.fill: parent.content
-
-                GridLayout {
-                    anchors.centerIn: parent
-                    width: 33
-                    height: 50
-                    columns: 2
-
-                    Button { text: "-"; Layout.preferredWidth: 16; Layout.preferredHeight: 16; }
-                    Button { text: "+"; Layout.preferredWidth: 16; Layout.preferredHeight: 16; }
-                    Button { text: "v"; Layout.preferredWidth: 16; Layout.preferredHeight: 16; }
-                    Button { text: "^"; Layout.preferredWidth: 16; Layout.preferredHeight: 16; }
-                    Button { text: "X"; Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.columnSpan: 2 }
+        delegate: Component {
+            Loader {
+                source: (function delegateForColumn(column) {
+                    return ["ChannelParameters.qml",
+                            "ChannelToolbar.qml",
+                            "ChannelPlot.qml",
+                            "ChannelExtra.qml"][column];
+                })(column)
+                onLoaded: {
+                    item.cellSizes = theCellSizes;
                 }
-            }
-
-            Item {
-                visible: column === 2
-                anchors.fill: parent.content
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: "#3a4055"
-                }
-            }
-
-            Text {
-                visible: column === 3
-                anchors.fill: parent.content
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: display + ",\nrow: " + row + ",\ncolumn: " + column
             }
         }
 

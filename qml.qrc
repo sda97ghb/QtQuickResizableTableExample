@@ -5,5 +5,8 @@
         <file>ResizableCellBehavior.qml</file>
         <file>ResizableCellBorder.qml</file>
         <file>ChannelParameters.qml</file>
+        <file>ChannelToolbar.qml</file>
+        <file>ChannelExtra.qml</file>
+        <file>ChannelPlot.qml</file>
     </qresource>
 </RCC>
