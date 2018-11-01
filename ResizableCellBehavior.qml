@@ -4,12 +4,15 @@ import MyTypes 0.1
 MouseArea {
     property ResizableCellSizes cellSizes: null
 
-    property var shouldResizeColumns: []
-
     property double resizeZoneSize: Qt.platform.os == "android" ? 24 : 6;
-    property point pressPoint: Qt.point(0, 0)
-    property int resizingRow: 0
+
+    property var shouldResizeColumns: []
+    property int shouldResizeRow: -1
+
+    property bool resizingRow: false
     property bool resizingColumn: false
+
+    property point pressPoint: Qt.point(0, 0)
 
     function zoneAt(x, y) {
         var cornerSize = resizeZoneSize;
@@ -48,9 +51,9 @@ MouseArea {
                 cellSizes.setColumnWidth(element.column, oldWidth + element.mul * dx);
             })
         }
-        if (resizingRow >= 0) {
-            var oldHeight = cellSizes.rowHeight(resizingRow);
-            cellSizes.setRowHeight(resizingRow, oldHeight + dy);
+        if (resizingRow) {
+            var oldHeight = cellSizes.rowHeight(shouldResizeRow);
+            cellSizes.setRowHeight(shouldResizeRow, oldHeight + dy);
         }
 
         pressPoint = currentPoint
@@ -77,7 +80,8 @@ MouseArea {
     onPressed: {
         var zone = zoneAt(mouse.x, mouse.y);
         resizingColumn = zone.x >= 0;
-        resizingRow = rowForZone(zone);
+        resizingRow = zone.y >= 0;
+        shouldResizeRow = rowForZone(zone);
 
         pressPoint = Qt.point(parent.x + mouse.x, parent.y + mouse.y);
 

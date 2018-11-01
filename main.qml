@@ -22,6 +22,13 @@ Window {
         defaultCellWidth: 200
     }
 
+    Component.onCompleted: {
+        theCellSizes.setColumnWidth(0, 200);
+        theCellSizes.setColumnWidth(1, 50);
+        theCellSizes.setColumnWidth(2, width - 350);
+        theCellSizes.setColumnWidth(3, 100);
+    }
+
     TableView {
         id: theTableView
         anchors.fill: parent
@@ -40,6 +47,13 @@ Window {
                     item.cellSizes = theCellSizes;
                 }
             }
+        }
+
+        onWidthChanged: {
+            theCellSizes.setColumnWidth(2, width - (theCellSizes.columnWidth(0) +
+                                                    theCellSizes.columnWidth(1) +
+                                                    theCellSizes.columnWidth(3)));
+            theTableView.forceLayout();
         }
 
         ScrollBar.vertical: ScrollBar {

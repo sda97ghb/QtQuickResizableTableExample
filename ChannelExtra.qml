@@ -7,7 +7,7 @@ ResizableCell {
 
     Text {
         anchors.fill: parent.content
-        horizontalAlignment: Text.AlignHCenter
+        horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         text: display + ",\nrow: " + row + ",\ncolumn: " + column
     }

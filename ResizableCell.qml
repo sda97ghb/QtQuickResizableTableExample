@@ -6,7 +6,6 @@ Item {
     property alias content: theContent
     property alias cellSizes: cellResizeBehavior.cellSizes
 
-    property alias shouldResizeColumn: cellResizeBehavior.shouldResizeColumn
     property alias shouldResizeColumns: cellResizeBehavior.shouldResizeColumns
 
     property double resizeZoneSize: Qt.platform.os == "android" ? 24 : 6;
